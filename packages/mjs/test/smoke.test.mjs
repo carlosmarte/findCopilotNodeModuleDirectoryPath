@@ -53,6 +53,31 @@ test('absent module resolves to null', () => {
   assert.equal(lib.findCopilot({ fromDir: tmp }), null);
 });
 
+test('exports-blocked package: no throw, manual fallback with best-effort entry', () => {
+  const tmp = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'fcp-mjs-exp-')));
+  const modDir = path.join(tmp, 'node_modules', '@github', 'copilot');
+  fs.mkdirSync(modDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(modDir, 'package.json'),
+    JSON.stringify({
+      name: '@github/copilot',
+      bin: { copilot: './cli.js' },
+      exports: { './package.json': './package.json' },
+    }),
+  );
+  fs.writeFileSync(path.join(modDir, 'cli.js'), '#!/usr/bin/env node\n');
+
+  assert.equal(lib.resolveModuleEntry('@github/copilot', { fromDir: modDir }), null);
+
+  const r = lib.findCopilot({ fromDir: modDir });
+  assert.equal(r.name, '@github/copilot');
+  assert.equal(r.strategy, 'manual');
+  assert.equal(r.dir, modDir);
+  assert.equal(r.entry, path.join(modDir, 'cli.js'));
+  assert.equal(r.binDir, path.join(tmp, 'node_modules', '.bin'));
+  assert.deepEqual(r.bin, { copilot: path.join(tmp, 'node_modules', '.bin', 'copilot') });
+});
+
 test('resolveFromHere returns a path for a real installed module or null', () => {
   // node:path is always resolvable; import.meta.resolve handles bare builtins
   // by returning a node: URL, so just assert it does not throw and is typed.

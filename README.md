@@ -17,6 +17,14 @@ All three expose the **same API** and find the module **two ways**:
 2. **Manual** — walk up the directory tree checking for `node_modules/<name>`.
    Works even for packages with no `main`/`exports` (data-only packages).
 
+> **Exports-blocked packages.** `@github/copilot` is installed but its `exports`
+> map does not expose `.`, so native `require.resolve` throws
+> `ERR_PACKAGE_PATH_NOT_EXPORTED`. All three packages **catch this** (along with
+> `MODULE_NOT_FOUND` / `ERR_UNSUPPORTED_DIR_IMPORT`), degrade to the manual walk,
+> and still return the package `dir` plus a **best-effort `entry`** read from the
+> package's own `package.json` (`main` → `module` → first `bin` → `index.js`).
+> `findCopilot()` never throws for an installed-but-unexported package.
+
 The default candidate list is tried first-match-wins:
 `@github/copilot` → `@github/copilot-sdk` → `@github/copilot-language-server`.
 
@@ -37,6 +45,8 @@ Every package exports:
 DEFAULT_CANDIDATES: string[]
 resolveModuleEntry(name, { fromDir? }): string | null      // native entry file
 packageRootFromEntry(name, entry, { fromDir? }): string | null
+readManifestEntry(dir): string | null                      // best-effort entry from manifest
+resolveBinInfo(name, dir): { binDir, bin }                  // .bin dir + bin shim map
 findClosestModuleDir(name, { fromDir? }): string | null    // manual walk
 findCopilot({ candidates?, fromDir?, strategy? }): FindResult | null
 // strategy: 'auto' (default) | 'native' | 'manual'
@@ -45,7 +55,15 @@ findCopilot({ candidates?, fromDir?, strategy? }): FindResult | null
 `@findcopilot/mjs` additionally exports `resolveFromHere(name)` — pure-ESM
 `import.meta.resolve`, relative to the library module (Node 20.6+).
 
-`FindResult = { name, dir, entry, strategy, fromDir }`.
+`FindResult = { name, dir, entry, binDir, bin, strategy, fromDir }` where:
+
+- `binDir` — the `.bin` folder at the root of the **containing** `node_modules`
+  (i.e. `<…>/node_modules/.bin`, the sibling of the package; two levels up for a
+  scoped name like `@github/copilot`).
+- `bin` — an object mapping each bin name declared in the package's
+  `package.json` `bin` field to its shim path under `binDir`, e.g.
+  `{ copilot: "<…>/node_modules/.bin/copilot" }`. String-form `bin` is keyed by
+  the package's unscoped name. Empty `{}` when the package declares no bins.
 
 ### CommonJS
 

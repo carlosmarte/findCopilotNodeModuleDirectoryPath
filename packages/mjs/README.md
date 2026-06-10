@@ -3,11 +3,20 @@
 ES Module resolver for the closest installed `@github/copilot*` module.
 
 ```js
-import { findCopilot, resolveModuleEntry, resolveFromHere } from '@findcopilot/mjs';
+import { findCopilot } from "@findcopilot/mjs";
+resolveFromHere("@github/copilot").bin.copilot;
+```
 
-findCopilot({ fromDir: import.meta.dirname });  // { name, dir, entry, strategy, fromDir } | null
-resolveModuleEntry('@github/copilot-sdk', { fromDir });  // anchored at fromDir
-resolveFromHere('@github/copilot');             // import.meta.resolve, relative to this module
+```js
+import {
+  findCopilot,
+  resolveModuleEntry,
+  resolveFromHere,
+} from "@findcopilot/mjs";
+
+findCopilot({ fromDir: import.meta.dirname }); // { name, dir, entry, strategy, fromDir } | null
+resolveModuleEntry("@github/copilot-sdk", { fromDir }); // anchored at fromDir
+resolveFromHere("@github/copilot"); // import.meta.resolve, relative to this module
 ```
 
 ESM has no implicit `require`, so native resolution is offered two ways:

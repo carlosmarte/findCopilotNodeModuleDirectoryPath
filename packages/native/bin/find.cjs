@@ -60,6 +60,10 @@ function main() {
   process.stdout.write(`✅ ${result.name} found (${result.strategy})\n`);
   process.stdout.write(`   dir:   ${result.dir}\n`);
   if (result.entry) process.stdout.write(`   entry: ${result.entry}\n`);
+  if (result.binDir) process.stdout.write(`   .bin:  ${result.binDir}\n`);
+  for (const [n, p] of Object.entries(result.bin || {})) {
+    process.stdout.write(`   bin:   ${n} → ${p}\n`);
+  }
 }
 
 main();

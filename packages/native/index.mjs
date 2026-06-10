@@ -8,6 +8,8 @@ const core = require('./src/core.cjs');
 export const DEFAULT_CANDIDATES = core.DEFAULT_CANDIDATES;
 export const resolveModuleEntry = core.resolveModuleEntry;
 export const packageRootFromEntry = core.packageRootFromEntry;
+export const readManifestEntry = core.readManifestEntry;
+export const resolveBinInfo = core.resolveBinInfo;
 export const findClosestModuleDir = core.findClosestModuleDir;
 export const findCopilot = core.findCopilot;
 
