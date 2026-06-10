@@ -1,0 +1,42 @@
+{
+  "name": "@findcopilot/native",
+  "version": "1.0.0",
+  "description": "Native dual-format (CJS + ESM) resolver for the closest installed @github/copilot* module. One implementation, zero build step.",
+  "license": "MIT",
+  "author": "Carlos Marte",
+  "type": "commonjs",
+  "main": "./index.cjs",
+  "module": "./index.mjs",
+  "exports": {
+    ".": {
+      "require": "./index.cjs",
+      "import": "./index.mjs",
+      "default": "./index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "find-copilot": "./bin/find.cjs"
+  },
+  "files": [
+    "src",
+    "index.cjs",
+    "index.mjs",
+    "bin"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "copilot",
+    "resolve",
+    "dual-package",
+    "esm",
+    "cjs",
+    "node_modules",
+    "native"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  }
+}

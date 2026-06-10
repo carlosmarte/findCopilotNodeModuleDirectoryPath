@@ -1,0 +1,35 @@
+{
+  "name": "@findcopilot/mjs",
+  "version": "1.0.0",
+  "description": "ES Module resolver for the closest installed @github/copilot* module (createRequire / import.meta.resolve + manual node_modules walk).",
+  "license": "MIT",
+  "author": "Carlos Marte",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "find-copilot-mjs": "./bin/find.mjs"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "copilot",
+    "resolve",
+    "import.meta.resolve",
+    "createRequire",
+    "node_modules",
+    "esm",
+    "mjs"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  }
+}

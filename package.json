@@ -1,0 +1,20 @@
+{
+  "name": "find-copilot-node-module-directory-path",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Polyglot Node packages (CJS, MJS, Native dual) for locating the closest installed @github/copilot* module directory.",
+  "license": "MIT",
+  "author": "Carlos Marte",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "demo:cjs": "node packages/cjs/bin/find.cjs",
+    "demo:mjs": "node packages/mjs/bin/find.mjs",
+    "demo:native": "node packages/native/bin/find.cjs"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
